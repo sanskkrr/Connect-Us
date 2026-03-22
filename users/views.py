@@ -6,6 +6,7 @@ from .forms import UserRegistrationForm
 from django.contrib.auth.decorators import login_required
 from .models import Profile
 from .forms import UserEditForm , ProfileEditForm
+from posts.models import Post
 
 
 
@@ -33,7 +34,9 @@ def user_login(request):
 
 @login_required 
 def index(request):
-    return render (request , 'users/index.html')
+    current_user = request.user
+    posts = Post.objects.filter(user = current_user)
+    return render (request , 'users/index.html', {'posts': posts})
 
 
 #USER REGISTRATION VIEW

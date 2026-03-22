@@ -4,10 +4,13 @@ from .forms import LoginForm
 from django.http import HttpResponse
 from .forms import UserRegistrationForm
 from django.contrib.auth.decorators import login_required
+from .models import Profile
+from .forms import UserEditForm , ProfileEditForm
 
 
 
 
+#USER LOGIN VIEW
 
 def user_login(request):
     if request.method == "POST":
@@ -25,9 +28,15 @@ def user_login(request):
         form = LoginForm()
     return render(request, 'users/login.html', {'form': form})
 
+
+#INDEX VIEW 
+
 @login_required 
 def index(request):
     return render (request , 'users/index.html')
+
+
+#USER REGISTRATION VIEW
 
 def register(request):
     if request.method == 'POST':
@@ -36,9 +45,31 @@ def register(request):
             new_user = user_form.save(commit=False)
             new_user.set_password(user_form.cleaned_data['password'])
             new_user.save()
+            Profile.objects.create(user=new_user) #creating profile for new user directly after registration
             return render(request, 'users/register_done.html')
     else:
         user_form = UserRegistrationForm()
 
     return render(request, 'users/register.html', {'user_form': user_form})
 
+#EDIT PROFILE VIEW
+@login_required
+def edit(request):
+    # Ensure profile exists
+    profile, created = Profile.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        user_form = UserEditForm(instance=request.user, data=request.POST)
+        profile_form = ProfileEditForm(instance=profile, data=request.POST, files=request.FILES)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+    else:
+        user_form = UserEditForm(instance=request.user)
+        profile_form = ProfileEditForm(instance=profile)
+
+    return render(request, 'users/edit.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })

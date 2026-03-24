@@ -1,94 +1,68 @@
-{% extends 'users/base.html' %}
-{% load static %}
-
-{% block body %}
+{% extends 'users/base.html' %} {% load static %} {% block body %}
 <div class="min-h-screen bg-gray-100 flex flex-col md:flex-row">
-
-    <!-- 🔷 SIDEBAR -->
-    <div class="w-full md:w-64 bg-white shadow-md p-4 md:p-6 flex md:flex-col justify-between">
-
-        <!-- TOP SECTION -->
-        <div class="flex md:flex-col items-center md:items-start gap-4 md:gap-6">
-
-            <!-- Profile Photo -->
-            <div class="w-20 h-20 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 border-gray-200">
-                <img src="{% static 'images/navlogo.png' %}" 
-                     class="w-full h-full object-cover">
-            </div>
-
-            <!-- Navigation -->
-            <ul class="flex md:flex-col gap-4 md:gap-4 text-gray-700 text-sm md:text-base">
-                <li class="hover:text-black cursor-pointer">Search</li>
-                <li class="hover:text-black cursor-pointer">My Profile</li>
-                <li class="hover:text-black cursor-pointer">My Posts</li>
-                <li class="hover:text-black cursor-pointer">My Feed</li>
-            </ul>
-
-        </div>
-
-        <!-- LOGOUT -->
-        <div class="hidden md:block mt-6">
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button class="text-red-500 hover:text-red-600">
-                    Logout
-                </button>
-            </form>
-        </div>
-
+  
+  <!-- 🔷 MAIN CONTENT -->
+  <div class="flex-1 p-6 md:p-10">
+    <!-- HEADER -->
+    <div class="mb-8 md:mb-10 text-center md:text-left">
+      <h1
+        class="text-5xl md:text-4xl font-semibold mb-2"
+        style="font-family: &quot;Poppins&quot;, sans-serif"
+      >
+        Connect-Us
+      </h1>
+      <p class="text-gray-500 text-sm md:text-base">
+        Stay connected. Stay you.
+      </p>
     </div>
 
-    <!-- 🔷 MAIN CONTENT -->
-    <div class="flex-1 p-6 md:p-10">
+    <!-- PEOPLE YOU FOLLOW -->
+    <div>
+      <h2
+        class="text-base md:text-lg font-semibold mb-12 md:mb-6 text-center md:text-left"
+      >
+        People you follow
+      </h2>
 
-        <!-- HEADER -->
-        <div class="mb-8 md:mb-10 text-center md:text-left">
-            <h1 class="text-5xl md:text-4xl font-semibold mb-2"
-                style="font-family: 'Poppins', sans-serif;">
-                Connect-Us
-            </h1>
-            <p class="text-gray-500 text-sm md:text-base">
-                Stay connected. Stay you.
-            </p>
+      <div
+        class="flex justify-center md:justify-start gap-4 md:gap-6 flex-wrap"
+      >
+        {% for i in "12345" %}
+        <div
+          class="w-14 h-14 md:w-20 md:h-20 bg-gray-300 rounded-full hover:scale-105 transition"
+        ></div>
+        {% endfor %}
+      </div>
+
+      <p
+        class="text-sm text-gray-500 mt-8 text-center md:text-left cursor-pointer hover:underline"
+      >
+        View all
+      </p>
+
+      <div
+        class="mt-16 text-center md:text-left text-xs text-gray-400 space-y-1"
+      >
+        <p>© 2026 Connect-Us</p>
+
+        <div class="flex justify-center md:justify-start gap-3">
+          <span class="cursor-pointer hover:text-gray-600">About</span>
+          <span>•</span>
+          <span class="cursor-pointer hover:text-gray-600">Privacy</span>
+          <span>•</span>
+          <span class="cursor-pointer hover:text-gray-600">Terms</span>
         </div>
-
-        <!-- PEOPLE YOU FOLLOW -->
-        <div>
-
-            <h2 class="text-base md:text-lg font-semibold mb-12 md:mb-6 text-center md:text-left">
-                People you follow
-            </h2>
-
-            <div class="flex justify-center md:justify-start gap-4 md:gap-6 flex-wrap">
-
-                {% for i in "12345" %}
-                <div class="w-14 h-14 md:w-20 md:h-20 bg-gray-300 rounded-full hover:scale-105 transition"></div>
-                {% endfor %}
-
-            </div>
-
-            <p class="text-sm text-gray-500 mt-8 text-center md:text-left cursor-pointer hover:underline">
-                View all
-            </p>
-
-            <div class="mt-16 text-center md:text-left text-xs text-gray-400 space-y-1">
-
-    <p>© 2026 Connect-Us</p>
-
-    <div class="flex justify-center md:justify-start gap-3">
-        <span class="cursor-pointer hover:text-gray-600">About</span>
-        <span>•</span>
-        <span class="cursor-pointer hover:text-gray-600">Privacy</span>
-        <span>•</span>
-        <span class="cursor-pointer hover:text-gray-600">Terms</span>
-    </div>
-
+        <div class="md:hidden ml-auto">
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button class="text-red-500 text-sm">
+            Logout
+        </button>
+    </form>
 </div>
-
-        </div>
-
+      </div>
     </div>
-
+  </div>
 </div>
 
 {% endblock %}

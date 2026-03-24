@@ -76,3 +76,19 @@ def edit(request):
         'user_form': user_form,
         'profile_form': profile_form
     })
+
+
+#my posts view
+
+
+@login_required
+def my_posts(request):
+    posts = Post.objects.filter(user=request.user)
+    return render(request, 'users/my_posts.html', {'posts': posts})
+
+
+
+#post detail view
+def post_detail(request, id):
+    post = Post.objects.get(id=id)
+    return render(request, 'users/post_detail.html', {'post': post})

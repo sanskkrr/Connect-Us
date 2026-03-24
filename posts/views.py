@@ -4,6 +4,8 @@ from .forms import PostCreateForm
 from django.contrib.auth.decorators import login_required
 
 
+#view for creating a new post
+
 @login_required
 def post_create(request):
     if request.method == 'POST':
@@ -16,3 +18,10 @@ def post_create(request):
         form = PostCreateForm(data = request.GET)
 
     return render(request , 'posts/create.html',{'form':form})
+
+
+#view for displaying all posts of the all the users (feed)
+
+def feed(request):
+    posts = Post.objects.all()
+    return render(request , 'posts/feed.html', {'posts':posts})

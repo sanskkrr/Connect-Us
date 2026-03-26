@@ -92,3 +92,6 @@ def my_posts(request):
 def post_detail(request, id):
     post = Post.objects.get(id=id)
     return render(request, 'users/post_detail.html', {'post': post})
+
+def intro(request):
+    return render(request, 'users/intro.html')

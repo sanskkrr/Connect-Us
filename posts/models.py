@@ -1,7 +1,10 @@
 from django.db import models
-from pyexpat import model
+
 from django.conf import settings
 from django.utils.text import slugify
+from django.contrib.auth.models import User
+
+
 
 
 #Model to store posts created by users
@@ -13,6 +16,7 @@ class Post(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, blank=True)
     created = models.DateField(auto_now_add=True)
+    likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
 
     def __str__(self):
         return self.title

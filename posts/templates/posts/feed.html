@@ -11,7 +11,7 @@
 
   <!-- 🔷 POSTS -->
   {% for post in posts %}
-  <div
+  <div id="post-{{ post.id }}"
     class="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden"
   >
     <!-- USER INFO -->
@@ -40,7 +40,20 @@
     <img src="{{ post.image.url }}" class="w-full max-h-[500px] object-cover" />
 
     <!-- ACTIONS -->
-    <div class="flex gap-4 px-4 py-2 text-gray-600 text-lg">❤️ 💬 🔖</div>
+    <form action="{% url 'like_post' post.id %}" method="POST">
+    {% csrf_token %}
+    <button type="submit" class="text-lg p-3 hover:bg-gray-100 rounded-full transition">
+         {% if post.likes.count > 0 %}
+            <span class="text-sm font-medium">{{ post.likes.count }}</span>
+        {% endif %}
+         {% if request.user in post.likes.all %}
+            ❤️
+        {% else %}
+            🩶
+        {% endif %}
+    </button>
+    </form>
+       
 
     <!-- CONTENT -->
     <div class="px-4 pb-4">

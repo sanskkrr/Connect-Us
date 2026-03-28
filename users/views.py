@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render,get_object_or_404
 from django.contrib.auth import authenticate , login
 from .forms import LoginForm
 from django.http import HttpResponse
@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Profile
 from .forms import UserEditForm , ProfileEditForm
 from posts.models import Post
+from django.contrib.auth.models import User
 
 
 
@@ -82,10 +83,17 @@ def edit(request):
 
 
 @login_required
-def my_posts(request):
-    posts = Post.objects.filter(user=request.user)
-    return render(request, 'users/my_posts.html', {'posts': posts})
 
+def my_posts(request):
+    user = request.user
+    profile = user.profile
+    posts = Post.objects.filter(user=user)
+
+    return render(request, 'users/my_posts.html', {
+        'posts': posts,
+        'profile_user': user,   # ✅ ADD THIS
+        'profile': profile      # ✅ ADD THIS
+    })
 
 
 #post detail view
@@ -95,3 +103,46 @@ def post_detail(request, id):
 
 def intro(request):
     return render(request, 'users/intro.html')
+
+#Follow functionality view
+
+@login_required
+def follow_toggle(request, username):
+    target_user = get_object_or_404(User, username=username)
+    profile = request.user.profile
+
+    if target_user.profile in profile.following.all():
+        profile.following.remove(target_user.profile)
+    else:
+        profile.following.add(target_user.profile)
+
+    return redirect('profile', username=username)
+
+
+#Search users view
+
+def search_users(request):
+    query = request.GET.get('q')
+    users = []
+
+    if query:
+        users = User.objects.filter(username__icontains=query)
+
+    return render(request, 'users/search.html', {
+        'users': users,
+        'query': query
+    })
+
+#another user profile view
+
+
+def profile(request, username):
+    user = get_object_or_404(User, username=username)
+    profile = user.profile
+    posts = user.post_set.all()
+
+    return render(request, 'users/my_posts.html', {
+        'profile_user': user,
+        'profile': profile,
+        'posts': posts
+    })

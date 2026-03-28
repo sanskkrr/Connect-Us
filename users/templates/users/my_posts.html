@@ -21,13 +21,16 @@
 
         <!-- Username -->
         <p class="text-gray-500 text-sm mb-1">
-            @{{ request.user.username }}
+            @{{ profile_user.username }}
+
         </p>
 
         <!-- Full Name -->
         <h1 class="text-xl md:text-2xl font-semibold mb-4">
-            {{ request.user.first_name }} {{ request.user.last_name }}
+            {{ profile_user.first_name }} {{ profile_user.last_name }}
         </h1>
+
+        
 
         <!-- Edit Profile Button -->
         <a href="{% url 'edit' %}"

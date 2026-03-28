@@ -9,6 +9,18 @@
         <div class="w-10 h-10 bg-gray-300 rounded-full"></div>
         <h2 class="font-semibold">{{ post.user.username }}</h2>
     </div>
+    {% if request.user != profile_user %}
+<form action="{% url 'follow_toggle' profile_user.username %}" method="POST">
+    {% csrf_token %}
+
+    {% if profile_user.profile in request.user.profile.following.all %}
+        <button class="px-4 py-2 bg-gray-300 rounded-lg">Unfollow</button>
+    {% else %}
+        <button class="px-4 py-2 bg-black text-white rounded-lg">Follow</button>
+    {% endif %}
+
+</form>
+{% endif %}
 
     <!-- IMAGE -->
     <img src="{{ post.image.url }}" class="w-full object-cover">

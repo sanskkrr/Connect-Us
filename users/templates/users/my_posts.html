@@ -1,65 +1,59 @@
-{% extends 'users/base.html' %}
-{% load static %}
+{% extends 'users/base.html' %} {% load static %} {% block body %}
 
-{% block body %}
+<!-- 🔷 PROFILE SECTION (CENTERED) -->
+<div class="flex flex-col items-center text-center mb-8">
+  <!-- Profile Image -->
+  <div
+    class="w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-gray-200 mb-4"
+  >
+    {% if request.user.profile.photo %}
+    <img src="{{ profile.photo.url }}" class="w-full h-full object-cover" />
+    {% else %}
+    <img
+      src="{% static 'images/default.png' %}"
+      class="w-full h-full object-cover"
+    />
+    {% endif %}
+  </div>
 
+  <!-- Username -->
+  <p class="text-gray-500 text-sm mb-1">@{{ profile_user.username }}</p>
 
+  <!-- Full Name -->
+  <h1 class="text-xl md:text-2xl font-semibold mb-4">
+    {{ profile_user.first_name }} {{ profile_user.last_name }}
+  </h1>
 
-    <!-- 🔷 PROFILE SECTION (CENTERED) -->
-    <div class="flex flex-col items-center text-center mb-8">
+  <!-- Edit Profile Button -->
+  <div class="flex gap-3">
+  <a href="{% url 'edit' %}" 
+     class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-100">
+    Edit Profile
+  </a>
 
-        <!-- Profile Image -->
-        <div class="w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-gray-200 mb-4">
-            {% if request.user.profile.photo %}
-    <img src="{{ request.user.profile.photo.url }}" 
-         class="w-full h-full object-cover">
-{% else %}
-    <img src="{% static 'images/default.png' %}" 
-         class="w-full h-full object-cover">
-{% endif %}
-        </div>
+  <a href="{% url 'create' %}" 
+     class="px-6 py-2 bg-black text-white rounded-lg hover:opacity-90">
+    + Post
+  </a>
+</div>
+</div>
 
-        <!-- Username -->
-        <p class="text-gray-500 text-sm mb-1">
-            @{{ profile_user.username }}
-
-        </p>
-
-        <!-- Full Name -->
-        <h1 class="text-xl md:text-2xl font-semibold mb-4">
-            {{ profile_user.first_name }} {{ profile_user.last_name }}
-        </h1>
-
-        
-
-        <!-- Edit Profile Button -->
-        <a href="{% url 'edit' %}"
-           class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition">
-            Edit Profile
-        </a>
-
+<!-- 🔷 POSTS GRID -->
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+  {% for post in posts %}
+  <a href="{% url 'post_detail' post.id %}">
+    <div
+      class="bg-gray-200 rounded-xl overflow-hidden hover:scale-105 transition"
+    >
+      <img
+        src="{{ post.image.url }}"
+        class="w-full aspect-square object-cover"
+      />
     </div>
-
-    <!-- 🔷 POSTS GRID -->
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-
-        {% for post in posts %}
-        <a href="{% url 'post_detail' post.id %}">
-            <div class="bg-gray-200 rounded-xl overflow-hidden hover:scale-105 transition">
-
-                <img src="{{ post.image.url }}" 
-                     class="w-full aspect-square object-cover">
-
-            </div>
-        </a>
-        {% empty %}
-        <p class="col-span-full text-gray-500 text-center">
-            No posts yet.
-        </p>
-        {% endfor %}
-
-    </div>
-
-
+  </a>
+  {% empty %}
+  <p class="col-span-full text-gray-500 text-center">No posts yet.</p>
+  {% endfor %}
+</div>
 
 {% endblock %}

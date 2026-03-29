@@ -8,6 +8,8 @@ from .models import Profile
 from .forms import UserEditForm , ProfileEditForm
 from posts.models import Post
 from django.contrib.auth.models import User
+import requests
+import random
 
 
 
@@ -146,3 +148,37 @@ def profile(request, username):
         'profile': profile,
         'posts': posts
     })
+
+
+
+#explore view to show posts from API
+
+
+def search_users(request):
+    query = request.GET.get('q')
+    users = []
+
+    if query:
+        users = User.objects.filter(username__icontains=query)
+
+    # 🔥 Explore content (random images)
+    queries = ["aesthetic", "nature", "travel", "minimal", "city"]
+    random_query = random.choice(queries)
+
+    url = f"https://api.pexels.com/v1/search?query={random_query}&per_page=9"
+
+    headers = {
+        "Authorization": "bOX4vnEISBWt3982CuUcegPjkGE1z3ri0Ema0elmDim7B0WWq4xaneti"
+    }
+
+    response = requests.get(url, headers=headers)
+    data = response.json()
+    images = data.get('photos', [])
+    random.shuffle(images)
+
+    return render(request, 'users/search.html', {
+        'users': users,
+        'query': query,
+        'images': images   # 👈 NEW
+    })
+

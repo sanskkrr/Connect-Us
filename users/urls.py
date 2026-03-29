@@ -20,4 +20,6 @@ urlpatterns = [
     path('follow/<str:username>/', views.follow_toggle, name='follow_toggle'),
     path('search/', views.search_users, name='search'),
     path('user/<str:username>/', views.profile, name='profile') ,
+    path('followers/<str:username>/', views.followers_list, name='followers_list'),
+    path('following/<str:username>/', views.following_list, name='following_list'),
 ]

@@ -35,12 +35,19 @@ def user_login(request):
 
 #INDEX VIEW 
 
-@login_required 
+@login_required
 def index(request):
     current_user = request.user
-    posts = Post.objects.filter(user = current_user)
-    return render (request , 'users/index.html', {'posts': posts})
 
+    posts = Post.objects.filter(user=current_user)
+
+    # 🔥 GET PEOPLE YOU FOLLOW
+    following_profiles = current_user.profile.following.all()[:5]
+
+    return render(request, 'users/index.html', {
+        'posts': posts,
+        'following_profiles': following_profiles
+    })
 
 #USER REGISTRATION VIEW
 
@@ -111,12 +118,15 @@ def intro(request):
 @login_required
 def follow_toggle(request, username):
     target_user = get_object_or_404(User, username=username)
-    profile = request.user.profile
 
-    if target_user.profile in profile.following.all():
-        profile.following.remove(target_user.profile)
+    current_profile = request.user.profile
+    target_profile = target_user.profile
+
+    if target_profile in current_profile.following.all():
+        current_profile.following.remove(target_profile)
     else:
-        profile.following.add(target_user.profile)
+        current_profile.following.add(target_profile)
+    current_profile.save()
 
     return redirect('profile', username=username)
 
@@ -182,3 +192,28 @@ def search_users(request):
         'images': images   # 👈 NEW
     })
 
+
+#following and followers list views
+
+@login_required
+def following_list(request, username):
+    user = get_object_or_404(User, username=username)
+    profiles = user.profile.following.all()
+
+    return render(request, 'users/user_list.html', {
+        'profiles': profiles,
+        'title': f"{user.username}'s Following",
+        'profile_user': user
+    })
+
+
+@login_required
+def followers_list(request, username):
+    user = get_object_or_404(User, username=username)
+    profiles = user.profile.followers.all()
+
+    return render(request, 'users/user_list.html', {
+        'profiles': profiles,
+        'title': f"{user.username}'s Followers",
+        'profile_user': user
+    })

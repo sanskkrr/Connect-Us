@@ -1,0 +1,52 @@
+{% extends 'users/base.html' %}
+{% load static %}
+{% block body %}
+
+<h2 class="text-xl font-semibold mb-4">{{ title }}</h2>
+
+<div class="space-y-4">
+
+    {% for prof in profiles %}
+    <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow">
+
+        <!-- Left side -->
+        <a href="{% url 'profile' prof.user.username %}" class="flex items-center gap-3">
+
+            <div class="w-12 h-12 rounded-full overflow-hidden">
+                {% if prof.photo %}
+                    <img src="{{ prof.photo.url }}" class="w-full h-full object-cover">
+                {% else %}
+                    <img src="{% static 'images/default.png' %}" class="w-full h-full object-cover">
+                {% endif %}
+            </div>
+
+            <div>
+                <p class="font-semibold">{{ prof.user.username }}</p>
+                <p class="text-sm text-gray-500">
+                    {{ prof.user.first_name }} {{ prof.user.last_name }}
+                </p>
+            </div>
+
+        </a>
+
+        <!-- Right side (Follow/Unfollow) -->
+        {% if request.user != prof.user %}
+        <form action="{% url 'follow_toggle' prof.user.username %}" method="POST">
+            {% csrf_token %}
+
+            {% if prof in request.user.profile.following.all %}
+                <button class="text-sm bg-gray-300 px-3 py-1 rounded">Unfollow</button>
+            {% else %}
+                <button class="text-sm bg-black text-white px-3 py-1 rounded">Follow</button>
+            {% endif %}
+        </form>
+        {% endif %}
+
+    </div>
+    {% empty %}
+        <p class="text-gray-500">No users found.</p>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

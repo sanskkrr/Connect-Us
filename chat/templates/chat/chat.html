@@ -3,6 +3,14 @@
 
 <div class="max-w-3xl mx-auto mt-6">
 
+    <button 
+    onclick="history.back()" 
+    class="mb-4 px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
+>
+    ← Back
+</button>
+
+
     <!-- 🔷 Header -->
     <div class="bg-white p-4 rounded-t-xl shadow font-semibold text-lg">
         Chat with {{ other_user.username }}
@@ -50,17 +58,35 @@ socket.onopen = function () {
 };
 
 socket.onmessage = function (e) {
-    console.log("🔥 RECEIVED:", e.data);
+    console.log("RUNNING NEW UI CODE");
 
     const data = JSON.parse(e.data);
-
     const chatBox = document.getElementById("chat-box");
 
-    const div = document.createElement("div");
-    div.innerText = data.sender + ": " + data.message;
+    const messageDiv = document.createElement("div");
 
-    chatBox.appendChild(div);
-};
+    // 🔥 temporary debug
+    console.log("SENDER:", data.sender);
+
+    if (data.sender === "{{ request.user.username }}") {
+        messageDiv.className = "text-right mb-2";
+        messageDiv.innerHTML = `
+            <span style="background:black;color:white;padding:6px 10px;border-radius:10px;display:inline-block;">
+                ${data.message}
+            </span>
+        `;
+    } else {
+        messageDiv.className = "text-left mb-2";
+        messageDiv.innerHTML = `
+            <span style="background:#d1d5db;padding:6px 10px;border-radius:10px;display:inline-block;">
+                ${data.message}
+            </span>
+        `;
+    }
+
+    chatBox.appendChild(messageDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
 
 function sendMessage() {
     console.log("🔥 CLICK WORKING");

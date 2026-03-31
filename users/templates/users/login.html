@@ -96,6 +96,11 @@
             </p>
 
             <h2 class="text-lg mb-4 text-center">Login</h2>
+            {% if form.non_field_errors %}
+<div class="bg-red-100 text-red-600 px-4 py-2 rounded-lg mb-4 text-sm">
+    {{ form.non_field_errors }}
+</div>
+{% endif %}
 
             <form method="POST" class="space-y-4">
               {% csrf_token %}

@@ -16,20 +16,30 @@ import random
 
 #USER LOGIN VIEW
 
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+
 def user_login(request):
     if request.method == "POST":
         form = LoginForm(request.POST)
+
         if form.is_valid():
             data = form.cleaned_data
-            user = authenticate(request,username = data['username'],password = data['password'])
-            if user is not None : 
-                login(request,user)
-                return HttpResponse("User authenticated and LoggedIn")
+            user = authenticate(
+                request,
+                username=data['username'],
+                password=data['password']
+            )
+
+            if user is not None:
+                login(request, user)
+                return redirect("index")   # change if needed
             else:
-                return HttpResponse("Invalid Credentials")
+                form.add_error(None, "Invalid username or password")  # 🔥 KEY LINE
 
     else:
         form = LoginForm()
+
     return render(request, 'users/login.html', {'form': form})
 
 
@@ -52,18 +62,29 @@ def index(request):
 #USER REGISTRATION VIEW
 
 def register(request):
-    if request.method == 'POST':
-        user_form = UserRegistrationForm(request.POST)
-        if user_form.is_valid():
-            new_user = user_form.save(commit=False)
-            new_user.set_password(user_form.cleaned_data['password'])
-            new_user.save()
-            Profile.objects.create(user=new_user) #creating profile for new user directly after registration
-            return render(request, 'users/register_done.html')
-    else:
-        user_form = UserRegistrationForm()
+    error = None
 
-    return render(request, 'users/register.html', {'user_form': user_form})
+    if request.method == "POST":
+        form = UserRegistrationForm(request.POST)
+
+        if form.is_valid():
+            user = form.save(commit=False)
+
+            # 🔥 IMPORTANT LINE
+            user.set_password(form.cleaned_data['password'])
+
+            user.save()
+            return redirect("login")
+        else:
+            error = form.errors
+
+    else:
+        form = UserRegistrationForm()
+
+    return render(request, "users/register.html", {
+        "form": form,
+        "error": error
+    })
 
 #EDIT PROFILE VIEW
 @login_required

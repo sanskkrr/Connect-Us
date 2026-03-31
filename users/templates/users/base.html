@@ -30,7 +30,7 @@
         >
           <!-- Profile -->
          <div class="w-12 h-12 md:w-24 md:h-24 rounded-lg overflow-hidden border-2 border-gray-300">
-    <img src="{% static 'images/logo11.png' %}" 
+    <img src="{% static 'images/navlogo.png' %}" alt="logo"
          class="w-full h-full object-cover">
 </div>
 
@@ -51,6 +51,10 @@
             <a href="{% url 'my_posts' %}">
               <li class="hover:text-black">👤 My Profile</li>
             </a>
+            <a href="{% url 'messages_list' %}">
+  <li class="hover:text-black">💬 Messages</li>
+</a>
+            
             
           </ul>
         </div>

@@ -25,3 +25,15 @@ def chat_view(request, username):
         'messages': messages,
         'other_user': other_user
     })
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
+@login_required
+def messages_list(request):
+    following = request.user.profile.following.all()
+
+    return render(request, 'chat/messages.html', {
+        'following': following
+    })

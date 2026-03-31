@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'posts',
+    'chat',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -69,7 +71,14 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = 'projectFolder.wsgi.application'
+ASGI_APPLICATION = 'projectFolder.asgi.application'
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
 
 
 # Database

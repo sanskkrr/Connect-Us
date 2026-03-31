@@ -55,17 +55,34 @@
       + Create Post
     </a>
   </div>
+  
 
   {% else %}
 
   <!-- OTHER USER PROFILE -->
+  <div class="flex gap-3 mt-4">
+
   <form action="{% url 'follow_toggle' profile_user.username %}" method="POST">
-    {% csrf_token %} {% if profile in request.user.profile.following.all %}
-    <button class="px-6 py-2 bg-gray-300 rounded-lg">Unfollow</button>
+    {% csrf_token %}
+    
+    {% if profile in request.user.profile.following.all %}
+      <button class="px-6 py-2 bg-gray-300 rounded-lg">
+        Unfollow
+      </button>
     {% else %}
-    <button class="px-6 py-2 bg-black text-white rounded-lg">Follow</button>
+      <button class="px-6 py-2 bg-black text-white rounded-lg">
+        Follow
+      </button>
     {% endif %}
   </form>
+
+  <a href="{% url 'chat' profile_user.username %}"
+     class="px-6 py-2 bg-blue-500 text-white rounded-lg flex items-center justify-center">
+     Message
+  </a>
+
+</div>
+  
 
   {% endif %}
 </div>

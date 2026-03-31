@@ -1,0 +1,80 @@
+{% extends 'users/base.html' %}
+{% block body %}
+
+<div class="max-w-3xl mx-auto mt-6">
+
+    <!-- 🔷 Header -->
+    <div class="bg-white p-4 rounded-t-xl shadow font-semibold text-lg">
+        Chat with {{ other_user.username }}
+    </div>
+
+    <!-- 🔷 Chat Box -->
+   <div id="chat-box" class="bg-white p-4 rounded-lg h-80 overflow-y-scroll mb-4">
+    
+    {% for msg in messages %}
+        <div class="{% if msg.sender == request.user %}text-right{% else %}text-left{% endif %} mb-2">
+            <span class="{% if msg.sender == request.user %}bg-black text-white{% else %}bg-gray-300{% endif %} px-3 py-1 rounded-lg inline-block">
+                {{ msg.content }}
+            </span>
+        </div>
+    {% endfor %}
+
+</div>
+
+    <!-- 🔷 Input -->
+    <div class="bg-white p-4 rounded-b-xl shadow flex gap-2">
+        <input id="message-input" type="text"
+               class="flex-1 border px-4 py-2 rounded-lg"
+               placeholder="Type a message...">
+
+        <button type="button" onclick="sendMessage()"
+                class="bg-black text-white px-6 py-2 rounded-lg">
+            Send
+        </button>
+    </div>
+
+</div>
+
+<!-- 🔥 WebSocket Script -->
+
+
+<script>
+const username = "{{ other_user.username }}";
+
+const socket = new WebSocket(
+    "ws://" + window.location.host + "/ws/chat/" + username + "/"
+);
+
+socket.onopen = function () {
+    console.log("✅ CONNECTED");
+};
+
+socket.onmessage = function (e) {
+    console.log("🔥 RECEIVED:", e.data);
+
+    const data = JSON.parse(e.data);
+
+    const chatBox = document.getElementById("chat-box");
+
+    const div = document.createElement("div");
+    div.innerText = data.sender + ": " + data.message;
+
+    chatBox.appendChild(div);
+};
+
+function sendMessage() {
+    console.log("🔥 CLICK WORKING");
+
+    const input = document.getElementById("message-input");
+    const message = input.value.trim();
+
+    if (!message) return;
+
+    socket.send(JSON.stringify({
+        message: message
+    }));
+
+    input.value = "";
+}
+</script>
+{% endblock %}

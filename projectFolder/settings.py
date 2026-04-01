@@ -15,12 +15,16 @@ from pathlib import Path
 
 import cloudinary
 import dj_database_url
-from dotenv import load_dotenv
+
+import os
+
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get("CLOUD_NAME"),
-    'API_KEY': os.environ.get("API_KEY"),
-    'API_SECRET': os.environ.get("API_SECRET"),
+    'CLOUD_NAME': os.environ.get("CLOUD_NAME", ""),
+    'API_KEY': os.environ.get("API_KEY", ""),
+    'API_SECRET': os.environ.get("API_SECRET", ""),
 }
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 
@@ -59,7 +63,7 @@ INSTALLED_APPS = [
 ]
 INSTALLED_APPS += ['cloudinary', 'cloudinary_storage']
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

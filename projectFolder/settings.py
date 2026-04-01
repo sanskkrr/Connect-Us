@@ -17,9 +17,9 @@ import cloudinary
 import dj_database_url
 from dotenv import load_dotenv
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ["CLOUD_NAME"],
-    'API_KEY': os.environ["API_KEY"],
-    'API_SECRET': os.environ["API_SECRET"],
+    'CLOUD_NAME': os.environ.get("CLOUD_NAME"),
+    'API_KEY': os.environ.get("API_KEY"),
+    'API_SECRET': os.environ.get("API_SECRET"),
 }
 
 

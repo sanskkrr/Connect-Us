@@ -44,8 +44,9 @@
     </div>
 
     <!-- IMAGE -->
-    <img src="{{ post.image.url }}" class="w-full max-h-[500px] object-cover" />
-
+  {% if post.image %}
+  <img src="{{ post.image.url }}" class="w-full max-h-[500px] object-cover" />
+{% endif %}
     <!-- ACTIONS -->
     <form action="{% url 'like_post' post.id %}" method="POST">
       {% csrf_token %}
@@ -55,8 +56,11 @@
       >
         {% if post.likes.count > 0 %}
         <span class="text-sm font-medium">{{ post.likes.count }}</span>
-        {% endif %} {% if request.user in post.likes.all %} ❤️ {% else %} 🩶 {%
-        endif %}
+        {% endif %} {% if post.likes.filter(user=request.user).exists %}
+    ❤️
+{% else %}
+    🩶
+{% endif %}
       </button>
     </form>
 

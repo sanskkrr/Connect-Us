@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 
 #view for creating a new post
-
+print("CLOUD:", os.environ.get("CLOUD_NAME"))
 @login_required
 def post_create(request):
     if request.method == 'POST':

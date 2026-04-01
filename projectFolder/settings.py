@@ -16,9 +16,14 @@ from pathlib import Path
 import cloudinary
 import dj_database_url
 from dotenv import load_dotenv
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ["CLOUD_NAME"],
+    'API_KEY': os.environ["API_KEY"],
+    'API_SECRET': os.environ["API_SECRET"],
+}
 
 
-load_dotenv()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -156,8 +161,3 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ["CLOUD_NAME"],
-    'API_KEY': os.environ["API_KEY"],
-    'API_SECRET': os.environ["API_SECRET"],
-}

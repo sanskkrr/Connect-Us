@@ -132,6 +132,7 @@ def post_detail(request, id):
     return render(request, 'users/post_detail.html', {'post': post})
 
 def intro(request):
+    print("CLOUD:", os.environ.get("CLOUD_NAME"))
     return render(request, 'users/intro.html')
 
 #Follow functionality view

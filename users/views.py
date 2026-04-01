@@ -1,3 +1,5 @@
+
+
 from django.shortcuts import redirect, render,get_object_or_404
 from django.contrib.auth import authenticate , login
 from .forms import LoginForm
@@ -33,7 +35,7 @@ def user_login(request):
 
             if user is not None:
                 login(request, user)
-                return redirect("index")   # change if needed
+                return redirect("index")  
             else:
                 form.add_error(None, "Invalid username or password")  # 🔥 KEY LINE
 
@@ -121,8 +123,8 @@ def my_posts(request):
 
     return render(request, 'users/my_posts.html', {
         'posts': posts,
-        'profile_user': user,   # ✅ ADD THIS
-        'profile': profile      # ✅ ADD THIS
+        'profile_user': user,  
+        'profile': profile     
     })
 
 
@@ -132,7 +134,7 @@ def post_detail(request, id):
     return render(request, 'users/post_detail.html', {'post': post})
 
 def intro(request):
-    print("CLOUD:", os.environ.get("CLOUD_NAME"))
+
     return render(request, 'users/intro.html')
 
 #Follow functionality view

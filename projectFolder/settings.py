@@ -146,7 +146,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 
 cloudinary.config(
-    cloud_name="djwsektcp",
-    api_key="582529387641299",
-    api_secret="2D2ovZz5fDPkhGd9lIO_rHl8va0"
+    cloud_name=os.environ.get("CLOUD_NAME"),
+    api_key=os.environ.get("API_KEY"),
+    api_secret=os.environ.get("API_SECRET")
 )

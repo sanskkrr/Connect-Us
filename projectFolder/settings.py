@@ -42,9 +42,7 @@ SECRET_KEY = 'django-insecure-wq47(c9-!qwnbjad+yib95_ci5%qw6xf!nwlh67lm0k%kqmlt_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [
-    "connect-us-nvww.onrender.com"
-]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -131,7 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 CSRF_TRUSTED_ORIGINS = [
-    "https://connect-us-nvww.onrender.com"
+   "https://connect-us-pruz.onrender.com"
 ]
 
 

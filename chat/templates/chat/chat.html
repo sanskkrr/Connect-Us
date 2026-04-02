@@ -45,9 +45,9 @@
 
 <!-- 🔥 WebSocket Script -->
 
-
 <script>
-const username = "{{ other_user.username }}";
+const roomName = "{{ room_name|escapejs }}";
+const currentUser = "{{ request.user.username }}";
 
 const protocol = window.location.protocol === "https:" ? "wss" : "ws";
 
@@ -55,22 +55,29 @@ const socket = new WebSocket(
     protocol + "://" + window.location.host + "/ws/chat/" + roomName + "/"
 );
 
+// ✅ connection open
 socket.onopen = function () {
-    console.log("✅ CONNECTED");
+    console.log("✅ WebSocket CONNECTED");
 };
 
-socket.onmessage = function (e) {
-    console.log("RUNNING NEW UI CODE");
+// ❌ error handling (VERY IMPORTANT)
+socket.onerror = function (e) {
+    console.error("❌ WebSocket ERROR:", e);
+};
 
+// ❌ connection close debug
+socket.onclose = function () {
+    console.warn("⚠️ WebSocket CLOSED");
+};
+
+// ✅ receive messages
+socket.onmessage = function (e) {
     const data = JSON.parse(e.data);
     const chatBox = document.getElementById("chat-box");
 
     const messageDiv = document.createElement("div");
 
-    // 🔥 temporary debug
-    console.log("SENDER:", data.sender);
-
-    if (data.sender === "{{ request.user.username }}") {
+    if (data.sender === currentUser) {
         messageDiv.className = "text-right mb-2";
         messageDiv.innerHTML = `
             <span style="background:black;color:white;padding:6px 10px;border-radius:10px;display:inline-block;">
@@ -88,15 +95,20 @@ socket.onmessage = function (e) {
 
     chatBox.appendChild(messageDiv);
     chatBox.scrollTop = chatBox.scrollHeight;
-}
+};
 
+// ✅ send message safely
 function sendMessage() {
-    console.log("🔥 CLICK WORKING");
-
     const input = document.getElementById("message-input");
     const message = input.value.trim();
 
     if (!message) return;
+
+    // 🚨 IMPORTANT FIX
+    if (socket.readyState !== WebSocket.OPEN) {
+        console.error("Socket not ready!");
+        return;
+    }
 
     socket.send(JSON.stringify({
         message: message
@@ -104,5 +116,12 @@ function sendMessage() {
 
     input.value = "";
 }
+
+// ✅ ENTER key support
+document.getElementById("message-input").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+        sendMessage();
+    }
+});
 </script>
 {% endblock %}

@@ -29,7 +29,7 @@ def feed(request):
     posts = Post.objects.all()
 
     for post in posts:
-        post.is_liked = post.likes.filter(user=request.user).exists()
+        post.is_liked = request.user in post.likes.all()
 
     return render(request, "posts/feed.html", {"posts": posts})
 

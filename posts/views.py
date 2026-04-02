@@ -1,4 +1,6 @@
-from django.shortcuts import redirect, render,get_object_or_404
+from django.shortcuts import redirect, render,get_object_or_404,request
+
+from projectFolder import posts
 from .models import Post
 from .forms import PostCreateForm
 from django.contrib.auth.decorators import login_required
@@ -24,7 +26,11 @@ def post_create(request):
 
 def feed(request):
     posts = Post.objects.all()
-    return render(request , 'posts/feed.html', {'posts':posts})
+
+    for post in posts:
+        post.is_liked = post.likes.filter(user=request.user).exists()
+
+    return render(request, "posts/feed.html", {"posts": posts})
 
 
 

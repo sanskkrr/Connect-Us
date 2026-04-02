@@ -10,20 +10,23 @@ from .models import Message
 @login_required
 def chat_view(request, username):
     other_user = get_object_or_404(User, username=username)
+    room_name = f"{request.user.username}_{other_user.username}"
 
     # ✅ GET BOTH SIDES MESSAGES
     messages = Message.objects.filter(
         sender=request.user, receiver=other_user
     ) | Message.objects.filter(
         sender=other_user, receiver=request.user
-    )
+    )   
 
     # ✅ IMPORTANT: ORDER THEM
     messages = messages.order_by('timestamp')
 
     return render(request, 'chat/chat.html', {
         'messages': messages,
-        'other_user': other_user
+        'other_user': other_user,
+        'room_name': room_name
+        
     })
 
 

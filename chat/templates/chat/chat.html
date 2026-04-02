@@ -46,7 +46,9 @@
 <!-- 🔥 WebSocket Script -->
 
 <script>
+    
 const roomName = "{{ room_name|escapejs }}";
+console.log("ROOM NAME:", roomName);
 const currentUser = "{{ request.user.username }}";
 
 const protocol = window.location.protocol === "https:" ? "wss" : "ws";

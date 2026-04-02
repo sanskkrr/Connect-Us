@@ -19,18 +19,12 @@ def save_message(sender, receiver, message):
 class ChatConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
-        user1 = self.scope["user"].username
-        user2 = self.scope["url_route"]["kwargs"]["username"]
+        self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
 
-        self.username = user2   # 🔥 ADD THIS LINE
-
-        if user1 < user2:
-            self.room_group_name = f"chat_{user1}_{user2}"
-        else:
-            self.room_group_name = f"chat_{user2}_{user1}"
+        self.room_group_name = f"chat_{self.room_name}"
 
         await self.channel_layer.group_add(
-            self.room_group_name,   
+            self.room_group_name,
             self.channel_name
         )
 

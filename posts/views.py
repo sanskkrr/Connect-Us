@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render,get_object_or_404,request
+from django.shortcuts import redirect, render,get_object_or_404
 
 from projectFolder import posts
 from .models import Post

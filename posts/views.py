@@ -45,3 +45,18 @@ def like_post(request, id):
         post.likes.add(request.user)      # like
 
     return redirect(request.META.get('HTTP_REFERER') + f"#post-{post.id}")
+
+
+@login_required
+def delete_post(request, id):
+    post = get_object_or_404(Post, id=id)
+
+    # 🔐 security check
+    if post.user != request.user:
+        return redirect('index')   # or show error page
+
+    if request.method == "POST":
+        post.delete()
+        return redirect('index')   # redirect after delete
+
+    return redirect('index')

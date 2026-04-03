@@ -90,16 +90,35 @@
 <!-- 🔷 POSTS GRID -->
 <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
   {% for post in posts %}
-  <a href="{% url 'post_detail' post.id %}">
-    <div
-      class="bg-gray-200 rounded-xl overflow-hidden hover:scale-105 transition"
-    >
-      <img
-        src="{{ post.image.url }}"
-        class="w-full aspect-square object-cover"
-      />
-    </div>
-  </a>
+  
+  <div class="relative">
+    
+    <!-- 🔴 DELETE BUTTON (top-right) -->
+    {% if post.user == request.user %}
+    <form action="{% url 'delete_post' post.id %}" method="POST"
+          class="absolute top-2 right-2 z-10">
+      {% csrf_token %}
+      <button 
+        type="submit"
+        onclick="return confirm('Delete this post?')"
+        class="bg-black text-white text-xs px-2 py-1 rounded">
+        Delete
+      </button>
+    </form>
+    {% endif %}
+
+    <!-- 🔵 POST IMAGE -->
+    <a href="{% url 'post_detail' post.id %}">
+      <div class="bg-gray-200 rounded-xl overflow-hidden hover:scale-105 transition">
+        <img
+          src="{{ post.image.url }}"
+          class="w-full aspect-square object-cover"
+        />
+      </div>
+    </a>
+
+  </div>
+
   {% empty %}
   <p class="col-span-full text-gray-500 text-center">No posts yet.</p>
   {% endfor %}

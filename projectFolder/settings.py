@@ -16,16 +16,28 @@ from pathlib import Path
 import cloudinary
 import dj_database_url
 
-import os
+from dotenv import load_dotenv
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / ".env")
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get("CLOUD_NAME", ""),
-    'API_KEY': os.environ.get("API_KEY", ""),
-    'API_SECRET': os.environ.get("API_SECRET", ""),
+    'CLOUD_NAME': os.environ.get("CLOUD_NAME"),
+    'API_KEY': os.environ.get("API_KEY"),
+    'API_SECRET': os.environ.get("API_SECRET"),
 }
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
+
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 
 
@@ -59,7 +71,7 @@ INSTALLED_APPS = [
     'chat',
     'channels',
 ]
-INSTALLED_APPS += ['cloudinary', 'cloudinary_storage']
+INSTALLED_APPS += ['cloudinary', 'cloudinary_storage',]
 
 
 

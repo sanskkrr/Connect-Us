@@ -46,71 +46,64 @@
 <!-- 🔥 WebSocket Script -->
 
 <script>
-    
 const roomName = "{{ room_name|escapejs }}";
-console.log("ROOM NAME:", roomName);
-const currentUser = "{{ request.user.username }}";
-
 const protocol = window.location.protocol === "https:" ? "wss" : "ws";
 
-const socket = new WebSocket(
-    protocol + "://" + window.location.host + "/ws/chat/" + roomName + "/"
-);
+let socket = null;
 
-// ✅ connection open
-socket.onopen = function () {
-    console.log("✅ WebSocket CONNECTED");
-};
+// 🔥 create connection FIRST
+function connectSocket() {
+    socket = new WebSocket(
+        protocol + "://" + window.location.host + "/ws/chat/" + roomName + "/"
+    );
 
-// ❌ error handling (VERY IMPORTANT)
-socket.onerror = function (e) {
-    console.error("❌ WebSocket ERROR:", e);
-};
+    socket.onopen = function () {
+        console.log("✅ CONNECTED");
+    };
 
-// ❌ connection close debug
-socket.onclose = function () {
-    console.warn("⚠️ WebSocket CLOSED");
-};
+    socket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        const chatBox = document.getElementById("chat-box");
 
-// ✅ receive messages
-socket.onmessage = function (e) {
-    const data = JSON.parse(e.data);
-    const chatBox = document.getElementById("chat-box");
+        const messageDiv = document.createElement("div");
 
-    const messageDiv = document.createElement("div");
+        if (data.sender === "{{ request.user.username }}") {
+            messageDiv.className = "text-right mb-2";
+            messageDiv.innerHTML = `
+                <span style="background:black;color:white;padding:6px 10px;border-radius:10px;">
+                    ${data.message}
+                </span>
+            `;
+        } else {
+            messageDiv.className = "text-left mb-2";
+            messageDiv.innerHTML = `
+                <span style="background:#d1d5db;padding:6px 10px;border-radius:10px;">
+                    ${data.message}
+                </span>
+            `;
+        }
 
-    if (data.sender === currentUser) {
-        messageDiv.className = "text-right mb-2";
-        messageDiv.innerHTML = `
-            <span style="background:black;color:white;padding:6px 10px;border-radius:10px;display:inline-block;">
-                ${data.message}
-            </span>
-        `;
-    } else {
-        messageDiv.className = "text-left mb-2";
-        messageDiv.innerHTML = `
-            <span style="background:#d1d5db;padding:6px 10px;border-radius:10px;display:inline-block;">
-                ${data.message}
-            </span>
-        `;
+        chatBox.appendChild(messageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    };
+
+    socket.onerror = (e) => console.log("❌ ERROR", e);
+    socket.onclose = () => console.log("⚠️ CLOSED");
+}
+
+// 🔥 send message ONLY if ready
+function sendMessage() {
+    console.log("🔥 CLICK WORKING");
+
+    if (!socket || socket.readyState !== WebSocket.OPEN) {
+        console.log("❌ Socket not ready");
+        return;
     }
 
-    chatBox.appendChild(messageDiv);
-    chatBox.scrollTop = chatBox.scrollHeight;
-};
-
-// ✅ send message safely
-function sendMessage() {
     const input = document.getElementById("message-input");
     const message = input.value.trim();
 
     if (!message) return;
-
-    // 🚨 IMPORTANT FIX
-    if (socket.readyState !== WebSocket.OPEN) {
-        console.error("Socket not ready!");
-        return;
-    }
 
     socket.send(JSON.stringify({
         message: message
@@ -119,11 +112,7 @@ function sendMessage() {
     input.value = "";
 }
 
-// ✅ ENTER key support
-document.getElementById("message-input").addEventListener("keypress", function(e) {
-    if (e.key === "Enter") {
-        sendMessage();
-    }
-});
+// 🔥 connect when page loads
+connectSocket();
 </script>
 {% endblock %}

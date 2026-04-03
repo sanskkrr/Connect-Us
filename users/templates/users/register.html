@@ -45,7 +45,15 @@
 
           <input type="password" name="password" placeholder="Password"
             class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-gray-400">
-
+            <div class="text-sm text-gray-500 mt-1">
+  Password must:
+  <ul class="list-disc ml-5">
+    <li>Be at least 8 characters long</li>
+    <li>Not be too common</li>
+    <li>Not be entirely numeric</li>
+    <li>Not be similar to your username</li>
+  </ul>
+</div>
           <input type="password" name="password2" placeholder="Confirm Password"
             class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-gray-400">
 

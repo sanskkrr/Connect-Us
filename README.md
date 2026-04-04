@@ -6,11 +6,11 @@ A full-stack social media application with real-time messaging built using Djang
 
 🌐 Live Demo
 
-👉 [Add your deployed link here]
+👉 https://connect-us-pruz.onrender.com
 
 💻 GitHub Repository
 
-👉 https://github.com/your-username/your-repo
+👉 https://github.com/sanskkrr/Connect-Us
 
 
 
@@ -47,7 +47,7 @@ Deployment:
 
 ⚙️ Installation (Local Setup)
 
-git clone https://github.com/your-username/your-repo.git
+git clone https://github.com/sanskkrr/connect-us.git
 cd your-repo
 
 python -m venv .venv
